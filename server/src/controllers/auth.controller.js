@@ -79,7 +79,7 @@ export const logout = (req, res) => {
     res.cookie("jwt", "", { maxAge: 0 });
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
-    console.log({ message: "Error in logout controller" });
+    console.log("Error in logout controller", error.message);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -93,5 +93,20 @@ export const updateProfile = async (req, res) => {
     return res
       .status(400)
       .json({ message: "Password must be atleast 6 characters" });
+  }
+  try {
+    const user = User.findOne({ email });
+  } catch (error) {
+    console.log("Error in update profile controller", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const checkAuth = (req, res) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    console.log("Error in checkAuth controller", error.message);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
