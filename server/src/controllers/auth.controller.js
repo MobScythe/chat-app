@@ -95,7 +95,25 @@ export const updateProfile = async (req, res) => {
       .json({ message: "Password must be atleast 6 characters" });
   }
   try {
-    const user = User.findOne({ email });
+    const user = req.user;
+    if (!user) {
+      return res.status(400).json({ message: "user does not exist" });
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedpassword = await bcrypt.hash(password, salt);
+
+    user.fullName = fullName;
+    user.email = email;
+    user.password = hashedpassword;
+
+    await user.save();
+
+    res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      profilePic: user.profilePic,
+    });
   } catch (error) {
     console.log("Error in update profile controller", error.message);
     res.status(500).json({ message: "Internal server error" });
