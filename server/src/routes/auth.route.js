@@ -15,6 +15,8 @@ router.post("/login", login);
 router.post("/logout", logout);
 
 router.put("/update-profile", protectRoute, updateProfile);
+router.put("/update-profilePic", protectRoute, updateProfile);
+router.delete("/delete-profilePic", protectRoute, updateProfile);
 
 router.get("/check", protectRoute, checkAuth);
 
